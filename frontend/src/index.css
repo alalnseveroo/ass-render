@@ -1,0 +1,533 @@
+/* Reset Básico & Estilos Globais */
+:root {
+  --background-dark: #121212;
+  --background-medium: #1a1a1a;
+  --background-light: #2c2c2c;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b3b3b3;
+  --accent-green: #00a884;
+  --accent-blue: #5a9cff;
+  --border-color: #333;
+  --error-color: #ff8a8a;
+  --active-bg: #2a2f32;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* Layout Principal */
+.main-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-medium);
+  border-right: 1px solid var(--border-color);
+}
+
+/* Barra Lateral de Sessões */
+.sessions-sidebar {
+  width: 70px;
+  padding: 10px 0;
+  align-items: center;
+}
+
+.session-container {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.session-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--background-light);
+  cursor: pointer;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.session-icon.active {
+  border-color: var(--accent-green);
+}
+
+.session-icon img, .session-icon .skeleton {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.session-delete-btn {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff5c5c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.session-container:hover .session-delete-btn {
+  opacity: 1;
+}
+
+.add-session-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--background-light);
+  border: 1px dashed var(--text-secondary);
+  color: var(--text-secondary);
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+/* Barra Lateral de Conversas */
+.conversations-sidebar {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.conversation-header {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.conversation-list-header {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--background-light);
+  color: var(--text-primary);
+}
+
+.new-chat-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--accent-green);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.conversation-list {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.conversation-item {
+  display: flex;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
+}
+
+.conversation-item:hover {
+  background-color: var(--background-light);
+}
+
+.conversation-item.active {
+  background-color: var(--active-bg);
+}
+
+.conversation-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--background-light);
+  margin-right: 15px;
+  overflow: hidden;
+}
+
+.conversation-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.conversation-details {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.conversation-name {
+  font-weight: bold;
+}
+
+.conversation-last-message {
+  font-size: 0.9em;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 4px 0 0 0;
+}
+
+/* Janela de Chat */
+.chat-window {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #0d1418; /* Cor de fundo do WhatsApp */
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: var(--background-medium);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.chat-header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.message-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-container {
+  display: flex;
+  margin-bottom: 10px;
+  max-width: 70%;
+}
+
+.message-container.mine {
+  align-self: flex-end;
+}
+
+.message-container.other {
+  align-self: flex-start;
+}
+
+.message-bubble {
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--text-primary);
+}
+
+.mine .message-bubble {
+  background-color: #005c4b; /* Verde do WhatsApp */
+}
+
+.other .message-bubble {
+  background-color: var(--active-bg);
+}
+
+.message-timestamp {
+  font-size: 0.75em;
+  color: var(--text-secondary);
+  margin-top: 5px;
+  text-align: right;
+}
+
+.message-input-area {
+  padding: 10px 15px;
+  background-color: var(--background-medium);
+}
+
+.message-input-area form {
+  display: flex;
+}
+
+.message-input-area input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--background-light);
+  color: var(--text-primary);
+  margin-right: 10px;
+}
+
+.message-input-area button {
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: none;
+  background-color: var(--accent-green);
+  color: white;
+  cursor: pointer;
+}
+
+/* Placeholder e Loading */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.loading-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-secondary);
+  margin: 0 4px;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--background-light);
+  padding: 20px 30px;
+  border-radius: 8px;
+  width: 350px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.qrcode-container {
+    margin: 20px 0;
+    padding: 10px;
+    background: white;
+    display: inline-block;
+}
+
+.qrcode-container img {
+    width: 256px;
+    height: 256px;
+    display: block;
+}
+
+.skeleton-qrcode {
+  width: 256px;
+  height: 256px;
+  background-color: #ccc;
+}
+
+.cancel-btn, .load-more-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.cancel-btn {
+    background-color: #555;
+    color: white;
+}
+
+/* =============================================== */
+/* ANIMAÇÃO DE NOTIFICAÇÃO (PISCAR/PULSAR) */
+/* =============================================== */
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 168, 132, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 168, 132, 0);
+  }
+}
+
+/* Aplica a animação ao indicador da SESSÃO */
+.session-unread-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent-green);
+    border-radius: 50%;
+    border: 2px solid var(--background-medium);
+    /* Adiciona a animação */
+    animation: pulse-animation 2s infinite;
+}
+
+/* Aplica uma animação mais sutil ao indicador da CONVERSA */
+.unread-badge {
+    background-color: var(--accent-green);
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-top: 4px;
+    /* Adiciona a animação */
+    animation: pulse-animation 2s infinite;
+}
+
+/* =============================================== */
+/* ANIMAÇÃO DE NOTIFICAÇÃO (PISCAR/PULSAR) */
+/* =============================================== */
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 168, 132, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 168, 132, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 168, 132, 0);
+  }
+}
+
+/* Aplica a animação ao indicador da SESSÃO */
+.session-unread-indicator {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent-green);
+    border-radius: 50%;
+    border: 2px solid var(--background-medium);
+    /* Adiciona a animação */
+    animation: pulse-animation 2s infinite;
+}
+
+/* Aplica uma animação mais sutil ao indicador da CONVERSA */
+.unread-badge {
+    background-color: var(--accent-green);
+    color: white;
+    font-size: 0.75em;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-top: 4px;
+    /* Adiciona a animação */
+    animation: pulse-animation 2s infinite;
+}
+
+/* =============================================== */
+/* CSS PARA RESPONSIVIDADE (Mobile First)      */
+/* =============================================== */
+
+.back-btn {
+    display: none; /* Escondido por padrão em telas grandes */
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .sidebar, .chat-window {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.3s ease-in-out;
+        will-change: transform;
+    }
+
+    /* Por padrão, só a barra de sessões é visível */
+    .sessions-sidebar { transform: translateX(0%); z-index: 30; }
+    .conversations-sidebar { transform: translateX(100%); z-index: 20; }
+    .chat-window { transform: translateX(100%); z-index: 10; }
+
+    /* Estado: Sessão Ativa (mostra a lista de conversas) */
+    .main-container.session-active .sessions-sidebar { transform: translateX(-100%); }
+    .main-container.session-active .conversations-sidebar { transform: translateX(0%); }
+    
+    /* Estado: Chat Ativo (mostra a janela de chat) */
+    .main-container.chat-active .conversations-sidebar { transform: translateX(-100%); }
+    .main-container.chat-active .chat-window { transform: translateX(0%); z-index: 40; }
+    
+    /* Mostra os botões de voltar quando necessário */
+    .conversation-header .back-btn, .chat-header .back-btn {
+        display: block;
+    }
+}

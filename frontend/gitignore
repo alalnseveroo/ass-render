@@ -1,0 +1,11 @@
+# Dependências
+node_modules/
+
+# Arquivos de Build
+frontend/dist/
+
+# Sessões do WhatsApp (NÃO devem ir para o GitHub)
+backend/.wwebjs_auth/
+
+# Arquivos de ambiente
+.env
