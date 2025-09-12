@@ -1,11 +1,24 @@
-FROM node:16-slim
+FROM node:18-bullseye-slim
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     chromium \
+    chromium-driver \
+    libgbm1 \
+    libnss3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libxkbcommon0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
     libgbm1 \
     libasound2 \
-    chromium-driver \
+    libpango-1.0-0 \
+    libcairo2 \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
