@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y \
     chromium \
     libgbm1 \
     libasound2 \
+    chromium-driver \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
