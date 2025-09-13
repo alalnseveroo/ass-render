@@ -29,46 +29,36 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 # Configurar diretório de trabalho
 WORKDIR /app
 
-# Copiar package.json do backend
-COPY backend/package*.json ./
+# Criar diretório dist
+RUN mkdir -p dist
 
-# Instalar dependências do backend
-RUN npm install
-
-# Copiar arquivos do frontend
-COPY frontend ./frontend
-
-# Construir o frontend
+# Copiar package.json do frontend e instalar dependências
+COPY frontend/package*.json ./frontend/
 WORKDIR /app/frontend
 RUN npm install
+
+# Copiar arquivos do frontend e construir
+COPY frontend/ ./
 RUN npm run build
+RUN cp -r dist/* ../dist/
 
-# Voltar para o diretório principal e copiar o resto dos arquivos do backend
+# Voltar para o diretório principal
 WORKDIR /app
-COPY backend ./
 
-# Copiar arquivos do frontend buildado para a pasta dist
-RUN cp -r frontend/dist/* dist/
+# Copiar package.json do backend e instalar dependências
+COPY backend/package*.json ./
+RUN npm install
+
+# Copiar arquivos do backend
+COPY backend/ ./
 
 # Criar diretório para as sessões do WhatsApp
 RUN mkdir -p .wwebjs_auth/session && \
     chmod -R 777 .wwebjs_auth
 
-WORKDIR /app
-
-# Copiar todo o projeto
-COPY . .
-
-# Instalar dependências e construir o projeto
-RUN chmod +x build.sh
-RUN ./build.sh
-
-# Configurar variáveis do Puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-
 # Expor porta
 ENV PORT=3000
 EXPOSE 3000
 
+# Iniciar a aplicação
 CMD ["node", "index.js"]
