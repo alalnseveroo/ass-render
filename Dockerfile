@@ -28,28 +28,26 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV NODE_ENV=production
 
-# Criar diretório da aplicação
+# Configurar diretório da aplicação
 WORKDIR /app
 
-# Copiar package.json do frontend e instalar dependências
-COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm install
+# Configurar frontend
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/. .
+RUN npm run build
 
-# Copiar arquivos do frontend e construir
-COPY frontend ./frontend
-RUN cd frontend && npm run build
-
-# Copiar package.json do backend e instalar dependências
+# Configurar backend
+WORKDIR /app
 COPY backend/package*.json ./
 RUN npm install
+COPY backend/. .
 
-# Copiar arquivos do backend
-COPY backend ./
-
-# Mover arquivos do frontend buildado
+# Configurar dist
 RUN mkdir -p dist && \
-    cp -r frontend/dist/* dist/ && \
-    rm -rf frontend
+    mv /app/frontend/dist/* /app/dist/ && \
+    rm -rf /app/frontend
 
 # Configurar permissões
 RUN mkdir -p .wwebjs_auth/session && \
