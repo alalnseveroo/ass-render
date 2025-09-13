@@ -13,7 +13,11 @@ const app = express();
 app.use(cors());
 
 // Servir arquivos estáticos
-app.use(express.static(path.join(__dirname, '../dist')));
+const distPath = path.join(__dirname, '../dist');
+console.log('Diretório dist:', distPath);
+console.log('Conteúdo do diretório:', fs.readdirSync(path.join(__dirname, '..')));
+
+app.use(express.static(distPath));
 
 // Middleware para logging
 app.use((req, res, next) => {
@@ -23,7 +27,12 @@ app.use((req, res, next) => {
 
 // Rota catch-all para SPA
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+  const indexPath = path.join(distPath, 'index.html');
+  console.log('Tentando servir:', indexPath);
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('index.html não encontrado');
 });
 
 const server = http.createServer(app);

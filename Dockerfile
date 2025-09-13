@@ -46,16 +46,42 @@ RUN npm install
 COPY backend/ ./
 
 # Copiar os arquivos do frontend buildado
-RUN mkdir -p dist
-COPY frontend/dist/ ./dist/
+RUN mkdir -p dist && \
+    cp -r /app/frontend/dist/* /app/dist/ && \
+    rm -rf /app/frontend && \
+    ls -la /app/dist && \
+    cat /app/dist/index.html
 
-# Criar diretório para as sessões do WhatsApp
+# Configurar permissões e diretórios
 RUN mkdir -p .wwebjs_auth/session && \
-    chmod -R 777 .wwebjs_auth
+    chmod -R 777 .wwebjs_auth && \
+    chmod -R 777 /app/dist && \
+    chown -R node:node /app && \
+    ls -la /app
+
+# Configurar usuário não-root para segurança
+USER node
 
 # Expor porta
 ENV PORT=3000
 EXPOSE 3000
 
+# Adicionar script de healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget -q --spider http://localhost:$PORT/ || exit 1
+
+# Adicionar script de inicialização com verificações
+COPY <<-"EOF" /app/start.sh
+#!/bin/bash
+echo "Verificando diretório dist..."
+ls -la /app/dist
+echo "Verificando index.html..."
+cat /app/dist/index.html
+echo "Iniciando aplicação..."
+exec node index.js
+EOF
+
+RUN chmod +x /app/start.sh
+
 # Iniciar a aplicação
-CMD ["node", "index.js"]
+CMD ["/app/start.sh"]
