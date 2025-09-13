@@ -26,27 +26,33 @@ RUN apt-get update && apt-get install -y \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-# Definir diretório de trabalho
+# Configurar diretório de trabalho
 WORKDIR /app
 
-# Copiar todos os arquivos
-COPY . .
+# Copiar package.json do backend
+COPY backend/package*.json ./
 
-# Instalar e construir o frontend
+# Instalar dependências do backend
+RUN npm install
+
+# Copiar arquivos do frontend
+COPY frontend ./frontend
+
+# Construir o frontend
 WORKDIR /app/frontend
 RUN npm install
 RUN npm run build
 
-# Instalar dependências do backend
-WORKDIR /app/backend
-RUN npm install
-
-# Preparar arquivos para produção
+# Voltar para o diretório principal e copiar o resto dos arquivos do backend
 WORKDIR /app
-RUN mkdir -p dist && \
-    cp -r frontend/dist/* dist/ && \
-    cp backend/index.js . && \
-    cp backend/package.json .
+COPY backend ./
+
+# Copiar arquivos do frontend buildado para a pasta dist
+RUN cp -r frontend/dist/* dist/
+
+# Criar diretório para as sessões do WhatsApp
+RUN mkdir -p .wwebjs_auth/session && \
+    chmod -R 777 .wwebjs_auth
 
 WORKDIR /app
 

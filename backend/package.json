@@ -4,7 +4,7 @@
   "description": "Backend robusto para o chat multi-sessão.",
   "main": "index.js",
   "scripts": {
-    "start": "node /app/index.js",
+    "start": "node index.js",
     "test": "vitest"
   },
   "keywords": [],
