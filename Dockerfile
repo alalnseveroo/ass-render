@@ -20,66 +20,60 @@ RUN apt-get update && apt-get install -y \
     libpango-1.0-0 \
     libcairo2 \
     xvfb \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Configurar variáveis do Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+ENV NODE_ENV=production
 
-# Configurar diretório de trabalho
+# Criar diretório da aplicação
 WORKDIR /app
 
-# Criar diretório dist
-RUN mkdir -p dist
+# Copiar package.json do frontend e instalar dependências
+COPY frontend/package*.json ./frontend/
+RUN cd frontend && npm install
 
-# Configurar e construir o frontend
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend/ ./
-RUN npm run build
+# Copiar arquivos do frontend e construir
+COPY frontend ./frontend
+RUN cd frontend && npm run build
 
-# Configurar o backend
-WORKDIR /app
+# Copiar package.json do backend e instalar dependências
 COPY backend/package*.json ./
 RUN npm install
-COPY backend/ ./
 
-# Copiar os arquivos do frontend buildado
+# Copiar arquivos do backend
+COPY backend ./
+
+# Mover arquivos do frontend buildado
 RUN mkdir -p dist && \
-    cp -r /app/frontend/dist/* /app/dist/ && \
-    rm -rf /app/frontend && \
-    ls -la /app/dist && \
-    cat /app/dist/index.html
+    cp -r frontend/dist/* dist/ && \
+    rm -rf frontend
 
-# Configurar permissões e diretórios
+# Configurar permissões
 RUN mkdir -p .wwebjs_auth/session && \
-    chmod -R 777 .wwebjs_auth && \
-    chmod -R 777 /app/dist && \
     chown -R node:node /app && \
-    ls -la /app
+    chmod -R 755 /app && \
+    chmod -R 777 .wwebjs_auth
 
-# Configurar usuário não-root para segurança
 USER node
 
 # Expor porta
 ENV PORT=3000
 EXPOSE 3000
 
-# Adicionar script de healthcheck
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget -q --spider http://localhost:$PORT/ || exit 1
-
-# Adicionar script de inicialização
+# Verificar a estrutura antes de iniciar
 RUN echo '#!/bin/bash\n\
-echo "Verificando diretório dist..."\n\
+echo "=== Estrutura de Diretórios ==="\n\
+ls -la /app\n\
+echo "=== Conteúdo do dist ==="\n\
 ls -la /app/dist\n\
-echo "Verificando index.html..."\n\
-cat /app/dist/index.html\n\
-echo "Iniciando aplicação..."\n\
-exec node index.js' > /app/start.sh
-
-RUN chmod +x /app/start.sh
+echo "=== Node Modules ==="\n\
+ls -la /app/node_modules\n\
+echo "=== Iniciando Aplicação ==="\n\
+exec node index.js' > /app/start.sh && \
+    chmod +x /app/start.sh
 
 # Iniciar a aplicação
-CMD ["/app/start.sh"]
+CMD ["./start.sh"]
