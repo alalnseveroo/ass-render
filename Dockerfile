@@ -29,33 +29,24 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 # Definir diretório de trabalho
 WORKDIR /app
 
-# Copiar package.json do backend primeiro
-COPY backend/package*.json ./
-
-# Instalar dependências do backend
-RUN npm install
-
-# Copiar package.json do frontend
-COPY frontend/package*.json ./frontend/
-
-# Instalar dependências do frontend
-WORKDIR /app/frontend
-RUN npm install
-
-# Copiar o resto dos arquivos
+# Copiar todos os arquivos
 COPY . .
 
-# Construir o frontend
+# Instalar e construir o frontend
+WORKDIR /app/frontend
+RUN npm install
 RUN npm run build
 
-# Voltar para o diretório principal
+# Instalar dependências do backend
+WORKDIR /app/backend
+RUN npm install
+
+# Preparar arquivos para produção
 WORKDIR /app
-
-# Copiar os arquivos do frontend buildado
-RUN mkdir -p dist && cp -r frontend/dist/* dist/
-
-# Copiar o arquivo index.js do backend para a raiz
-RUN cp backend/index.js .
+RUN mkdir -p dist && \
+    cp -r frontend/dist/* dist/ && \
+    cp backend/index.js . && \
+    cp backend/package.json .
 
 WORKDIR /app
 
