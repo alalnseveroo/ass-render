@@ -32,25 +32,22 @@ WORKDIR /app
 # Criar diretório dist
 RUN mkdir -p dist
 
-# Copiar package.json do frontend e instalar dependências
-COPY frontend/package*.json ./frontend/
+# Configurar e construir o frontend
 WORKDIR /app/frontend
+COPY frontend/package*.json ./
 RUN npm install
-
-# Copiar arquivos do frontend e construir
 COPY frontend/ ./
 RUN npm run build
-RUN cp -r dist/* ../dist/
 
-# Voltar para o diretório principal
+# Configurar o backend
 WORKDIR /app
-
-# Copiar package.json do backend e instalar dependências
 COPY backend/package*.json ./
 RUN npm install
-
-# Copiar arquivos do backend
 COPY backend/ ./
+
+# Copiar os arquivos do frontend buildado
+RUN mkdir -p dist
+COPY frontend/dist/ ./dist/
 
 # Criar diretório para as sessões do WhatsApp
 RUN mkdir -p .wwebjs_auth/session && \

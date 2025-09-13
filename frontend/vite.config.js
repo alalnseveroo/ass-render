@@ -7,6 +7,11 @@ export default defineConfig({
   server: {
     port: 5173
   },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true
+  },
   test: {
     globals: true,
     environment: 'jsdom', // Simula um ambiente de navegador
