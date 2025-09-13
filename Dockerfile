@@ -31,23 +31,24 @@ ENV NODE_ENV=production
 # Configurar diretório da aplicação
 WORKDIR /app
 
+# Criar estrutura de diretórios
+RUN mkdir -p frontend dist
+
 # Configurar frontend
+COPY frontend/package*.json /app/frontend/
 WORKDIR /app/frontend
-COPY frontend/package*.json ./
 RUN npm install
-COPY frontend/. .
-RUN npm run build
+COPY frontend/. /app/frontend/
+RUN npm run build && \
+    cp -r dist/* /app/dist/ && \
+    cd /app && \
+    rm -rf frontend
 
 # Configurar backend
 WORKDIR /app
 COPY backend/package*.json ./
 RUN npm install
 COPY backend/. .
-
-# Configurar dist
-RUN mkdir -p dist && \
-    mv /app/frontend/dist/* /app/dist/ && \
-    rm -rf /app/frontend
 
 # Configurar permissões
 RUN mkdir -p .wwebjs_auth/session && \
