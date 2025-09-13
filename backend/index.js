@@ -15,12 +15,12 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*", // Em produção, você deve trocar isso pela URL real do seu frontend
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 const sessions = new Map();
 const sockets = new Map();
 const MESSAGE_BATCH_SIZE = 30;
@@ -218,7 +218,7 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(port, () => {
-  console.log(`[INFO] Servidor backend rodando em http://localhost:${port}`);
+server.listen(port, '0.0.0.0', () => {
+  console.log(`[INFO] Servidor backend rodando na porta ${port}`);
   restoreSessions();
 });
