@@ -11,6 +11,12 @@ process.setMaxListeners(30);
 
 const app = express();
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Rota catch-all para SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 const server = http.createServer(app);
 const io = new Server(server, {

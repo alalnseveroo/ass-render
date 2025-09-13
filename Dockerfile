@@ -24,12 +24,12 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copiar e instalar dependências do backend
-COPY backend/package*.json ./
-RUN npm install
+# Copiar todo o projeto
+COPY . .
 
-# Copiar arquivos do backend
-COPY backend ./
+# Instalar dependências e construir o projeto
+RUN chmod +x build.sh
+RUN ./build.sh
 
 # Configurar variáveis do Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
