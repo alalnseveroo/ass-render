@@ -2,7 +2,7 @@ import React, { createContext, useContext } from 'react';
 import io from 'socket.io-client';
 
 // Conecta ao backend. Altere a URL se o seu backend estiver em outro lugar.
-const socket = io('https://.onrender.com');
+const socket = io(window.location.origin);
 const SocketContext = createContext(socket);
 
 export const useSocket = () => {

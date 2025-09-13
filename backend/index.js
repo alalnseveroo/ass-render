@@ -11,7 +11,15 @@ process.setMaxListeners(30);
 
 const app = express();
 app.use(cors());
+
+// Servir arquivos estáticos
 app.use(express.static(path.join(__dirname, 'dist')));
+
+// Middleware para logging
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 // Rota catch-all para SPA
 app.get('*', (req, res) => {

@@ -1,15 +1,22 @@
 #!/bin/bash
+set -e
 
-# Instalar dependências do frontend
+echo "Instalando dependências do frontend..."
 cd frontend
 npm install
 
-# Construir o frontend
+echo "Construindo o frontend..."
 npm run build
 
-# Voltar para a pasta raiz
+echo "Voltando para a pasta raiz..."
 cd ..
 
-# Instalar dependências do backend
+echo "Instalando dependências do backend..."
 cd backend
 npm install
+
+echo "Copiando build do frontend..."
+mkdir -p dist
+cp -r ../frontend/dist/* dist/
+
+echo "Build completo!"
