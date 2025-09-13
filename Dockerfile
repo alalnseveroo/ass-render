@@ -70,16 +70,14 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget -q --spider http://localhost:$PORT/ || exit 1
 
-# Adicionar script de inicialização com verificações
-COPY <<-"EOF" /app/start.sh
-#!/bin/bash
-echo "Verificando diretório dist..."
-ls -la /app/dist
-echo "Verificando index.html..."
-cat /app/dist/index.html
-echo "Iniciando aplicação..."
-exec node index.js
-EOF
+# Adicionar script de inicialização
+RUN echo '#!/bin/bash\n\
+echo "Verificando diretório dist..."\n\
+ls -la /app/dist\n\
+echo "Verificando index.html..."\n\
+cat /app/dist/index.html\n\
+echo "Iniciando aplicação..."\n\
+exec node index.js' > /app/start.sh
 
 RUN chmod +x /app/start.sh
 
